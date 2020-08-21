@@ -9,8 +9,6 @@ const RedditData = () => {
   const [categoryValue, setCategoryValue] = React.useState("reactjs");
   const [labelAfter, setLabelAfter] = React.useState(null);
   const [labelBefore, setLabelBefore] = React.useState(null);
-  const [distCount, setDistCount] = React.useState(0);
-  const [arrDistCount, setArrDistCount] = React.useState([])
   const changeLimits = (event) => {
     setLimitsValue(event.target.value);
   }
@@ -18,47 +16,33 @@ const RedditData = () => {
     setCategoryValue(event.target.value)
   }
   const getNextRedditData = async () => {
-    setArrDistCount((arrDistCount) => arrDistCount.concat(distCount))
-    setCount(arrDistCount.reduce((acc, curVal) => acc + curVal, 0));
-   
     const data = await RedditFetch(categoryValue, limitsValue, count, labelAfter, null);
-    console.log(data)
+    setCount((count) => count + +limitsValue);
     setLabelAfter(data.after);
     setLabelBefore(data.before);
-    setDistCount(data.dist)
     setRecords(data.children);
   }
-
   const getPrevRedditData = async () => {
-    const data = await RedditFetch(categoryValue, arrDistCount[arrDistCount.length-1], count, null, labelBefore)
-    setArrDistCount((arrDistCount) => arrDistCount.slice(0, arrDistCount.length-1));
-    setCount(arrDistCount.reduce((acc, curVal) => acc + curVal, 0));
-    console.log("countPrev", count);
-    console.log("arrDistCount", arrDistCount);
+    const data = await RedditFetch(categoryValue, limitsValue, count, null, labelBefore)
     setLabelAfter(data.after);
     setLabelBefore(data.before);
-    setDistCount(data.dist)
-    setRecords(data.children);  
+    setRecords(data.children);
+    setCount((count) => count - +limitsValue);
+    if (labelBefore === null) {
+      setCount(0)
+    }
+  
   }
-
-
   React.useEffect(() => {
     (async () => {
-      setArrDistCount([]);
       setCount(0);
       const data = await RedditFetch(categoryValue, limitsValue, 0)
-      console.log(data)
-      setDistCount(data.dist)
       setRecords(data.children);
       setLabelAfter(data.after);
       setLabelBefore(data.before);
 
     })()
   }, [limitsValue, categoryValue]);
-  console.log("arrDistCount", arrDistCount)
-
-  console.log("countNext", count)
-
   return (
     <>
       <select value={limitsValue} onChange={changeLimits} name="Limits">

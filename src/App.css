@@ -7,9 +7,24 @@
   display: block;
   width: 45%;
   height: 350px;
-  float: left;
-  padding: 10px;
+  padding: 15px;
   margin: 10px;
+  float: left;
   text-align: center;
 }
 
+.Record {
+  background: #d9dabb;
+  display: block;
+  width: 45%;
+  padding: 20px;
+  margin: 10px auto;
+}
+
+.Comments {
+  background: #d9dabb;
+  display: block;
+  width: 45%;
+  padding: 20px;
+  margin: 10px auto;
+}

@@ -2,11 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 
-const RedditItem = ({ thumbnail, created, num_comments, author, score, title, permalink }) => {
+const RedditItem = ({ thumbnail, created, num_comments, author, score, title, permalink, subreddit, id }) => {
+  let link = permalink.split("/")
+  link = link[link.length-2]
   return (
-    <Link to={permalink}>
+    <Link to={`/r/${subreddit}/comments/${id}/${link}`}>
       <figure className="Item">
-        <img className="record" src={thumbnail} alt={title} />
+        <img src={thumbnail} alt={title} />
         <figcaption>
           <h3>{title}</h3>
           <div>Created: {new Date(created*1000).toLocaleDateString()}</div>
@@ -16,23 +18,15 @@ const RedditItem = ({ thumbnail, created, num_comments, author, score, title, pe
         </figcaption>
       </figure>
     </Link>
+
   );
 };
 
 const RedditList = ({ items }) => {
   return (
-    <div>
+    <div className="ItemList">
       {items.map((item) => (
-        <RedditItem 
-          key={item.data.id} 
-          thumbnail={item.data.thumbnail}
-          created={item.data.created}
-          num_comments={item.data.num_comments}
-          author={item.data.author}
-          score={item.data.score}
-          title={item.data.title}
-          permalink={item.data.permalink}
-        />
+        <RedditItem key={item.data.id} {...item.data} />
       ))}
     </div>
   );
